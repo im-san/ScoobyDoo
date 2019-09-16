@@ -11,5 +11,6 @@
 	"steps": {
 		"Open SAC": {
 			"1": ["open", "https://google.com"]
+		}
 	}
 }
