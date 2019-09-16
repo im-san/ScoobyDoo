@@ -1,0 +1,138 @@
+{
+	"name": "Redbull Scenario 1 Exercise 1",
+	"config": {
+		"headless": "False",
+		"driverpath": "C:\\chromedriver.exe",
+		"implicitwait": 45,
+		"pageload": 45,
+		"scriptTimeout": 45,
+		"elementWaitTime": 45
+	},
+	"steps": {
+		"Open SAC": {
+			"1": ["open", "https://red-bull-rel.rel.canary.eu10.projectorca.cloud/sap/fpa/ui/app.html#;view_id=home"]
+		},
+		"Login": "saml-login.json",
+		"Create Story": {
+			"1": ["wait", "//*[text()='Hello, SAPOSSBI3!']"],
+			"2": ["click", "//*[@title = 'Main Menu']"],
+			"3": ["click", "//*[text()='Create']"],
+			"4": ["click", "//*[text()='Story']"]
+		},
+		"Select Model": {
+			"1": ["click", "//*[text()='Access & Explore Data']"],
+			"2": ["click", "//*[@aria-label='models' and @role='presentation']"],
+			"3": ["fill", "//*[@role = 'dialog']//*[@placeholder='Search']", "c4a"],
+			"4": ["click", "//*[@role = 'dialog']//*[text()='BW4HANA_XOTM100_']"]
+		},
+		"Validate BW Connection": {
+			"1": ["fill", "//*[@role = 'dialog']//*[@class='sapEpmUiInputTextArea']", "sapossbi3\tRh3test00\n"],
+			"2": ["getall", "(//*[@aria-label = 'value-help'])[2]"],
+			"3": ["click", "prev", 0],
+			"4": ["click", "//*[contains(@id,'Button')]"],
+			"5": ["click", "//*[text() = 'OK']"],
+			"6": ["click", "//*[text() = 'Set']"]
+		},
+		"Data Modelling": {
+			"1": ["click", "//*[text() = 'Show Dimensions']"],
+			"2": ["click", "//*[@role = 'menu']//*[@aria-label='search']"],
+			"3": ["fill", "//*[@role = 'menu']//*[@placeholder='Search']", "H4 Product Variant"],
+			"4": ["click", "//*[@role= 'menu']//*[@title='H4 Product Variant']//*[@class= 'sapEpmUiCheckBoxBox']"],
+			"5": ["click", "//*[text() = '# TS Sold Goods']"],
+			"6": ["click", "//*[text() = 'Show Dimensions']"],
+			"7": ["click", "//*[@role = 'menu']//*[@aria-label='search']"],
+			"8": ["fill", "//*[@role = 'menu']//*[@placeholder='Search']", "H5 Product Filling size"],
+			"9": [
+				"click",
+				"//*[@role= 'menu']//*[@title='H5 Product Filling Size']//*[@class= 'sapEpmUiCheckBoxBox']"
+			],
+			"10": ["click", "//*[text() = 'RB Blue Edition']"],
+			"11": ["click", "//*[text() = 'RB Red Edition']"],
+			"12": ["click", "//*[text() = 'RB Silver Edition']"]
+		},
+		"Bar Chart Creation": {
+			"1": ["click", "//*[@title = 'Story' and @role = 'radio']"],
+			"2": ["click", "//*[text()='Chart']"],
+			"3": ["click", "//*[@title = 'Bar/Column']"],
+			"4": ["click", "//*[text() = 'Bar/Column']"],
+			"5": ["click", "//*[text() = 'Add Measure']"],
+			"6": [
+				"click",
+				"//*[@class= 'sap-bi-va-widgets-SearchDropdown-Dropdown']//*[@title='FICO000051 (# TS Sold Goods)']//div"
+			],
+			"7": ["click", "//*[text() = 'Expand List...']"],
+			"8": ["click", "//*[text() = 'Done']"],
+			"9": ["click", "//*[text() = 'Add Dimension']"],
+			"10": ["click", "//*[@class ='sapMSFI'][@placeholder = 'Search']"],
+			"11": ["fill", "//*[@class ='sapMSFI'][@placeholder = 'Search']", "H4 Product Variant"],
+			"12": [
+				"click",
+				"//*[@class= 'sap-bi-va-widgets-SearchDropdown-Dropdown']//*[@title='TMATERIAL__TPROD_HI4 (H4 Product Variant)']//div"
+			],
+			"13": ["click", "//*[text() = 'Expand List...']"],
+			"14": ["click", "//*[text() = 'Done']"]
+		},
+		"Chart Sub menu Operations": {
+			"1": ["click", "//*[@class='sapFpaBiVisualization-vizControl']"],
+			"2": ["click", "//*[@class='sapEpmStoryQuickActionsInner']//*[@title = 'Sort Options']"],
+			"3": ["click", "//*[@class='sapUiMnuLst']//*[@title = '# TS Sold Goods']"],
+			"4": ["click", "//*[@title ='Sort by the Selected Measure Highest to Lowest']"],
+			"5": ["click", "//*[@title='More Actions']"],
+			"6": ["click", "//*[@role='menu']//*[@title = 'Show/Hide']"],
+			"7": ["click", "//*[@title=' Subtitle']"]
+		},
+		"Tree Chart Creation": {
+			"1": ["click", "//*[@title = 'Story' and @role = 'radio']"],
+			"2": ["click", "//*[@title ='Chart']"],
+			"3": [
+				"click",
+				"(//*[@class='sapChartPickerSlimArrowDown sapMBtnIcon sapMBtnIconLeft sapMBtnIconMiddle sapUiIcon sapUiIconMirrorInRTL'])[3]"
+			],
+			"4": ["click", "//*[text() = 'Tree Map']"],
+			"5": ["click", "//*[text() = 'Add Measure']"],
+			"6": ["click", "//*[text() = '# TS Sold Goods']"],
+			"7": ["click", "//*[text() = 'Add Dimension']"],
+			"8": ["click", "//*[@class ='sapMSFI'][@placeholder = 'Search']"],
+			"9": ["fill", "//*[@class ='sapMSFI'][@placeholder = 'Search']", "Sales Group"],
+			"10": [
+				"click",
+				"//*[@class= 'sap-bi-va-widgets-SearchDropdown-Dropdown']//*[@title='TSALS_GRP (Sales Group)']//div"
+			],
+			"11": ["click", "//*[text() = 'Expand List...']"],
+			"12": ["click", "//*[text() = 'Done']"],
+			"13": ["click", "//*[text() = '# TS Sold Goods per Sales Group for ACT (Actuals)']"],
+			"14": [
+				"click",
+				"//*[@class ='sapEpmStoryQuickActions stayOpen verticalLayout']//*[@class='sapEpmStoryQuickActionsInner']//*[@title='Copy']"
+			],
+			"15": [
+				"click",
+				"//*[@class ='sapEpmMenu sapEpmStoryQuickActionMenu sapUiMnu sapUiMnuCozySupport sapUiShd opened']//*[@class='sapUiMnuItm sapUiMnuItmLast sapEpmMenuItem sapUiMnuNoSbMnu']"
+			],
+			"16": [
+				"click",
+				"//*[@class ='sapEpmStoryQuickActions stayOpen verticalLayout']//*[@class='sapEpmStoryQuickActionsInner']//*[@title='Copy']"
+			],
+			"17": [
+				"click",
+				"//*[@class ='sapEpmMenu sapEpmStoryQuickActionMenu sapUiMnu sapUiMnuCozySupport sapUiShd opened']//*[@class='sapUiMnuItm sapUiMnuItmLast sapEpmMenuItem sapUiMnuNoSbMnu']"
+			],
+			"18": ["click", "(//*[@title ='# TS Sold Goods per Sales Group for ACT (Actuals)'])[2]"],
+			"19": [
+				"click",
+				"(//*[@class ='sapChartPickerSlimArrowDown sapMBtnIcon sapMBtnIconLeft sapMBtnIconMiddle sapUiIcon sapUiIconMirrorInRTL'])[2]"
+			],
+			"20": ["click", "//*[text() = 'Time Series']"]
+		},
+
+		"Save Story": {
+			"1": ["click", "//*[@aria-label = 'save']"],
+			"2": ["click", "//*[@role='menu']//*[@title='Save']"],
+			"3": ["click", "//button[@id='__mbox-btn-0']"],
+			"4": ["clear", "//*[@class='sapEpmUiInputTextArea']"],
+			"5": ["fill", "//*[@class='sapEpmUiInputTextArea']", "TR_SC1_CHS_SEL_PY_01"],
+			"6": ["click", "//*[text()='OK']"],
+			"7": ["wait", "//*[text()='Story Saved']"]
+		}
+	}
+}
