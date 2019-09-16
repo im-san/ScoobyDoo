@@ -1,16 +1,24 @@
 {
-	"name": "Redbull Scenario 1 Exercise 1",
-	"config": {
-		"headless": "False",
-		"driverpath": "C:\\chromedriver.exe",
-		"implicitwait": 45,
-		"pageload": 45,
-		"scriptTimeout": 45,
-		"elementWaitTime": 45
-	},
-	"steps": {
-		"Open SAC": {
-			"1": ["open", "https://google.com"]
-		}
-	}
+    "name": "Redbull Scenario 1 Exercise 1",
+    "config": {
+        "headless": "False",
+        "driverpath": "C:\\chromedriver.exe",
+        "implicitwait": 45,
+        "pageload": 45,
+        "scriptTimeout": 45,
+        "elementWaitTime": 90
+    },
+    "steps": {
+        "Access Site": {
+            "1": ["open", "url-here"]
+        },
+        "Login": {
+            "1": ["fill", "//*[@id ='bms-id']", "user\tpass\n"]
+        },
+        "File Ingestion": {
+            "1": ["click", "//*[@id ='mat-expansion-panel-header-4']"],
+            "2": ["click", "//*[text() = 'File Source']"],
+            "3": ["wait", "//*[text() = 'Evaru']"]
+        }
+    }
 }
