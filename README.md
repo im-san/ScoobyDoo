@@ -34,4 +34,19 @@ Make sure python installation is complete before running this step. You can chec
 # Running the application
 Open command prompt or terminal in the location where the project files were downloaded, make sure to make changes to the sample.json file in the config folder acrrodingly and run the below command.
 
-	```python start.py sample.json```
+	```python start.py <options> <optional parameters>```
+
+    ```    Options::```
+
+    ```        clean <no. of days> ---> can be used to clean all the Log, Screenshot and report files ```
+    ```                example : python start.py clean 7 ```
+
+    ```        run <json filename> ---> Use to run a UI automation where the json filename ```
+    ```                                 contains JSON for the UI automation```
+    ```                                 Make sure to place the JSON file in the config folder before running ```
+    ```                example : python start.py run sample.json```
+
+    ```        server ---> starts a REST API server on port 8000```
+    
+    ```        help ---> Print the help doc.```
+    

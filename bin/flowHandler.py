@@ -1,8 +1,4 @@
-import json
-import datetime
-import sys
-import os
-sys.path.append(os.getcwd() + '//bin/')
+import json, datetime, os
 from collections import OrderedDict
 from time import sleep
 from selenium import webdriver
@@ -16,6 +12,7 @@ LOGFILENAME = os.getcwd() + '//log/RunLog_{0}.log'
 REPORTFILENAME = os.getcwd() + '//output/REPORT_{0}.html'
 CSVFILENAME = os.getcwd() + '//output/REPORT_{0}.csv'
 LOGLINE = '{0} :: {1} - {2}'
+VALID_CMDS = ['wait','click', 'fill','get','getall','open','clear', 'doubleclick','rename', 'moveto']
 
 class TestScn:
     def __init__(self, _data):
@@ -25,6 +22,7 @@ class TestScn:
             self.data = _data
             self.steps = _data['steps']
             self.__config = _data['config']
+            self.__config['elementWaitTime'] = 60 
             _hdls = 'Browser will be running in headless mode' if self.__config['headless'].lower() == 'true' else 'Browser will run in foreground'
             self.__log(_hdls)
             self.__setup()
@@ -38,9 +36,9 @@ class TestScn:
         _co = webdriver.ChromeOptions()
         _co.headless = True if self.__config['headless'].lower() == 'true' else False
         self.driver = webdriver.Chrome(executable_path = self.__config['driverpath'], chrome_options = _co)
-        self.driver.set_page_load_timeout(self.__config['pageload'])
-        self.driver.implicitly_wait(self.__config['implicitwait'])
-        self.driver.set_script_timeout(self.__config['scriptTimeout'])
+        self.driver.set_page_load_timeout(60)
+        self.driver.implicitly_wait(60)
+        self.driver.set_script_timeout(60)
         self.driver.maximize_window()
         self.actions = ActionChains(self.driver)
         self.prevState = []
@@ -57,7 +55,7 @@ class TestScn:
         if 'steps' not in data.keys(): _isValid = False
         for step in data['steps'].keys():
             for key in data['steps'][step].keys():
-                if data['steps'][step][key][0].lower() not in ['wait','click', 'fill', 'login','get','getall','open','clear']:
+                if data['steps'][step][key][0].lower() not in VALID_CMDS:
                     _isValid = False
                     print('"' + data['steps'][step][key][0] + '" is not a valid action !')
         return _isValid
@@ -80,16 +78,16 @@ class TestScn:
 
 
     def __preSetup(self):
-        self.screensfolder = os.getcwd() + '//screens//SC' + datetime.datetime.now().strftime(r'%Y%m%d%H%M%S')
-        self.logFile = open(LOGFILENAME.format(datetime.datetime.now().strftime(r'%Y%m%d_%H%M%S')), 'a')
-        self.__log('Starting Pre setup Checks')
         if not os.path.isdir(os.getcwd() + '//log'):
             os.mkdir(os.getcwd() + '//log')
         if not os.path.isdir(os.getcwd() + '//screens'):
             os.mkdir(os.getcwd() + '//screens')
         if not os.path.isdir(os.getcwd() + '//output'):
             os.mkdir(os.getcwd() + '//output')
+        self.screensfolder = os.getcwd() + '//screens//SC' + datetime.datetime.now().strftime(r'%Y%m%d%H%M%S')
         os.mkdir(self.screensfolder)
+        self.logFile = open(LOGFILENAME.format(datetime.datetime.now().strftime(r'%Y%m%d_%H%M%S')), 'a')
+        self.__log('Starting Pre setup Checks')
 
 
     def __findElement(self, xpath):
@@ -104,7 +102,6 @@ class TestScn:
             _sc_name = self.screensfolder + r'/Screencapture_{0}.png'.format(''.join(c for c in xpath if c.isalnum()))
             self.driver.save_screenshot(_sc_name)
             self.__log('Element Located')
-            sleep(2)
             return rtVal
         self.__error('Failed to locate the element with xpath ' + xpath)
         _sc_name = self.screensfolder + r'/Screencapture_{0}_failure.png'.format(''.join(c for c in xpath if c.isalnum()))
@@ -139,7 +136,7 @@ class TestScn:
 
 
     def __saveState(self,elem):
-        if len(self.prevState) < 5:
+        if len(self.prevState) < 5: 
             self.prevState.append(elem)
         else:
             for i in reversed(range(1,len(self.prevState))):
@@ -152,10 +149,32 @@ class TestScn:
             rtVal = WebDriverWait(self.driver, int(self.__config['elementWaitTime'])).until( \
         EC.element_to_be_clickable((By.XPATH, xpath)))
             rtVal.click()
+            self.__log('Element Clickable ')
         except Exception as e:
             self.__error('Element not Clickale')
             self.__error(str(e))
-        
+            return False
+
+
+    def __double_click(self, xpath):
+        try:
+            rtVal = WebDriverWait(self.driver, int(self.__config['elementWaitTime'])).until( \
+        EC.element_to_be_clickable((By.XPATH, xpath)))
+            self.actions.double_click(rtVal).perform()
+        except Exception as e:
+            self.__error('Element not Clickale')
+            self.__error(str(e))
+
+
+    def __rename(self, xpath, val):
+        try:
+            rtVal = WebDriverWait(self.driver, int(self.__config['elementWaitTime'])).until( \
+        EC.visibility_of((By.XPATH, xpath)))
+            self.driver.execute_script('arguments[0].innerHTML = "{0}";'.format(val), rtVal)
+        except Exception as e:
+            self.__error('Element not Visible yet to change the value')
+            self.__error(str(e))        
+
 
     def runSteps(self):
         for case in self.steps.keys():
@@ -164,7 +183,7 @@ class TestScn:
                 _elm = None
                 if inputs[1].lower() == 'prev':
                     _elm = self.prevState[inputs[2]]
-                if inputs[0].lower() in ['fill', 'get','clear','wait'] and inputs[1].lower() != 'prev':
+                if inputs[0].lower() in ['fill', 'get','clear','wait', 'moveto','rename','doubleclick', 'click'] and inputs[1].lower() != 'prev':
                     _elm = self.__findElement(inputs[1])
                     if _elm == None:
                         self.runDetails['Steps'][case.capitalize()] = 'Failed'
@@ -180,13 +199,15 @@ class TestScn:
                     if inputs[0].lower() == 'click': self.__click(inputs[1])
                     if inputs[0].lower() == 'clear': _elm.clear()
                     if inputs[0].lower() == 'fill': _elm.send_keys(inputs[2])
-                    #if inputs[0].lower() == 'login': self.__saml_login(inputs[1])
                     if inputs[0].lower() == 'open': self.driver.get(inputs[1])
+                    if inputs[0].lower() == 'moveto': self.actions.move_to_element(_elm).perform()
+                    if inputs[0].lower() == 'doubleclick': self.actions.double_click(_elm).perform()
+                    if inputs[0].lower() == 'rename' : self.__rename(inputs[1], inputs[2])
                 except Exception as e:
                     self.__error('unable to perform "{0}" operation on element with path "{1}"'.format(inputs[0], inputs[1]))
                     self.__error(str(e))
                     self.runDetails['Steps'][case.capitalize()] = 'Failed'
-                    return 1
+                    break
                 self.__saveState(_elm)
             self.runDetails['Steps'][case.capitalize()] = 'Passed'
             

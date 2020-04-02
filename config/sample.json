@@ -1,24 +1,46 @@
 {
-    "name": "Redbull Scenario 1 Exercise 1",
-    "config": {
-        "headless": "False",
-        "driverpath": "C:\\chromedriver.exe",
-        "implicitwait": 45,
-        "pageload": 45,
-        "scriptTimeout": 45,
-        "elementWaitTime": 90
-    },
-    "steps": {
-        "Access Site": {
-            "1": ["open", "url-here"]
-        },
-        "Login": {
-            "1": ["fill", "//*[@id ='bms-id']", "user\tpass\n"]
-        },
-        "File Ingestion": {
-            "1": ["click", "//*[@id ='mat-expansion-panel-header-4']"],
-            "2": ["click", "//*[text() = 'File Source']"],
-            "3": ["wait", "//*[text() = 'Evaru']"]
-        }
-    }
+	"name": "Trail/Sample",
+	"config": {
+		"headless": "False",
+		"driverpath": "C:\\chromedriver.exe"
+	},
+	"steps": {
+		"Open Google": {
+			"1": [
+				"open",
+				"https://www.google.com/"
+			]
+		},
+		"Do a Search": {
+			"1": [
+				"fill",
+				"//*[@title='Search']",
+				"Corona\n"
+			]
+		},
+		"Refine Results": {
+			"1": [
+				"click",
+				"//*[text()=\"www.worldometers.info › coronavirus\"]"
+			]
+		},
+		"Move inside site": {
+			"1": [
+				"click",
+				"//a[text()='Got it!']"
+			],
+			"2": [
+				"click",
+				"//a[text()='view by country']"
+			],
+			"3": [
+				"click",
+				"//a[text()='USA']"
+			],
+			"4": [
+				"wait",
+				"//*[@role = 'dialog']"
+			]
+		}
+	}
 }
